@@ -1,0 +1,7 @@
+config/*.ini
+venv/*
+
+# dev
+*.jpg
+results/dos_booklet/*.cls
+results/dos_booklet/*.pdf

@@ -1,0 +1,304 @@
+\documentclass[10pt,a4paper]{scrreprt}
+
+%----------------------------------------------------------------------------------------
+%	REQUIRED PACKAGES AND MISC CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{graphicx} % Required for including images
+
+\setcounter{secnumdepth}{-2} % Remove all section numbering
+
+\usepackage{hyperref}
+\usepackage{multicol} % Allows table cells to span multiple columns
+\usepackage{longtable} % Allows the creation of tables that automatically wrap to the next page
+
+\pagestyle{plain} % Use the plain page style for all headers and footers (only a page number)
+
+\usepackage{scrhack} % Fixes compatibility issues between KOMA-Script and other packages
+
+\usepackage{lastpage} % Required to determine the total number of pages
+
+\usepackage{pdfpages}
+
+%----------------------------------------------------------------------------------------
+%	MARGINS
+%----------------------------------------------------------------------------------------
+
+\usepackage[
+	top=2.5cm, % Top margin
+	bottom=2.5cm, % Bottom margin
+	inner=1.5cm, % Inner margin
+	outer=3cm, % Outer margin
+	footskip=1.4cm, % Space from the bottom margin to the baseline of the footer
+	headsep=0.8cm, % Space from the top margin to the baseline of the header
+	headheight=0.5cm, % Height of the header
+	%showframe % Uncomment to show the frames around the margins for debugging purposes
+]{geometry}
+
+
+%----------------------------------------------------------------------------------------
+%	FONTS & TYPOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+
+\usepackage[sfdefault, lf]{carlito} % Use the Carlito family of sans-serif fonts with lining figures
+
+\DeclareUnicodeCharacter{200B}{ }
+
+%----------------------------------------------------------------------------------------
+%	COLOURS
+%----------------------------------------------------------------------------------------
+
+\usepackage{xcolor} % Required for defining and using custom colours
+
+\definecolor{myorange}{RGB}{255, 117, 40}
+\definecolor{mywhite}{RGB}{235, 238, 231}
+
+\definecolor{mpigreen}{RGB}{17, 102, 86}
+\definecolor{mpigrey}{RGB}{221, 222, 214}
+
+% from https://cran.r-project.org/web/packages/unikn/vignettes/color_inst.html
+\newcommand{\primarycolor}{mpigreen}
+\newcommand{\secondarycolor}{mywhite}
+
+% Table colours
+\newcommand{\tbg}{gray} % Event background
+\newcommand{\tfg}{white} % Event foreground (text)
+\newcommand{\tbc}{gray!25} % Break background
+
+% Talk types colours
+\newcommand{\IScolor}{mpigreen!65} % Invited speaker
+\newcommand{\CTcolor}{white} % Contributed talk
+\newcommand{\KLcolor}{myorange!45} % Keynote lecture
+\newcommand{\ITcolor}{yellow!25} % Invited talk
+
+%----------------------------------------------------------------------------------------
+%	LINKS
+%----------------------------------------------------------------------------------------
+
+\usepackage{hyperref} % Required for links
+
+\hypersetup{
+	colorlinks=false,
+	%urlcolor=\primarycolor, % Colour for \url and \href links
+	%linkcolor=\primarycolor, % Colour for \nameref links
+	hidelinks, % Hide the default boxes around links
+}
+
+%----------------------------------------------------------------------------------------
+%	TABLE DEFINITIONS
+%----------------------------------------------------------------------------------------
+
+\usepackage{array} % Required for manipulating table columns
+
+\newcommand{\tablebreak}[2]{\rowcolor{\tbc} #1 & \multicolumn{4}{c|}{\bfseries #2} \\ \hline } % Timetable conference break row
+\newcommand{\eventtype}[2]{#1 & \multicolumn{4}{c|}{\cellcolor{\tbg}\color{\tfg}\bfseries #2} \\ \hline } % Timetable conference event row
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}} % Define a new left-aligned (no justification) column type
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}} % Define a new centred column type
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}} % Define a new right-aligned column type
+
+\newcommand{\IS}[4]{#1 & \cellcolor{\IScolor}IS & {\bfseries#2}\newline #3 & & #4 \\ \hline} % Invited speaker row
+\newcommand{\CT}[4]{#1 & \cellcolor{\CTcolor}CT & {\bfseries#2}\newline #3 & & #4 \\ \hline} % Contributed talk row
+\newcommand{\KL}[4]{#1 & \cellcolor{\KLcolor}KL & {\bfseries#2}\newline #3 & & #4 \\ \hline} % Keynote lecture row
+\newcommand{\IT}[4]{#1 & \cellcolor{\ITcolor}IT & {\bfseries#2}\newline #3 & & #4 \\ \hline} % Invited talk row
+\newcommand{\tutorial}[4]{#1 & & {\bfseries#2}\newline #3 & & #4 \\ \hline} % Tutorial row
+
+%----------------------------------------------------------------------------------------
+%	CHAPTER STYLING
+%----------------------------------------------------------------------------------------
+
+\newdimen\mybarpadding
+\mybarpadding=1.5em\relax % Horizontal padding between the coloured bar and chapter name
+
+\RedeclareSectionCommand[% Adjust the spacing around the \chapter command
+	afterskip=4em plus 1pt minus 1pt,% Vertical whitespace under chapters
+	beforeskip=-1pt, % Vertical whitespace before chapters
+	level=0,% Chapters are the top level command
+	toclevel=0,% Chapters are the top level command
+]{chapter}
+
+\setkomafont{chapter}{\normalfont\normalsize\bfseries\Huge} % Chapter font style
+
+\RedeclareSectionCommand[% Adjust the spacing around the \section command
+	afterskip=6pt,% Vertical whitespace under sections
+	beforeskip=3pt, % Vertical whitespace before chapters
+	level=1,% Sections are the second level command
+	toclevel=1,% Sections are the second level command
+]{section}
+
+%------------------------------------------------
+
+\renewcommand{\chapterlinesformat}[3]{%
+	\ifthispageodd{% Odd pages have the coloured bar to the left of the chapter title
+		\hfill% Coloured bar fills available width
+		\raisebox{-0.2em}{\makebox[0pt][r]{\textcolor{\primarycolor}{\rule{\paperwidth}{1em}}}}% Coloured bar
+		\hspace{\mybarpadding}% Padding between the chapter title and colour bar
+		\mbox{#3}% Chapter title
+	}{% Even pages have the coloured bar to the right of the chapter title
+		\mbox{#3}% Chapter title
+		\hspace{\mybarpadding}% Padding between the chapter title and colour bar
+		\raisebox{-0.2em}{\makebox[0pt][l]{\textcolor{\primarycolor}{\rule{\paperwidth}{1em}}}}% Coloured bar
+	}%
+}
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT STYLING
+%----------------------------------------------------------------------------------------
+
+\newcommand{\dosabstract}[4]{
+\filbreak % Avoid page breaks within abstracts
+
+\noindent
+{\large \bfseries #1} % Title
+
+\noindent
+{\bfseries \itshape #2} % Author(s)	
+
+\noindent
+\textcolor{mpigrey}{#3} % Affiliation(s)
+
+\vskip 0.2 cm
+\noindent
+#4 % Abstract text
+\vskip 0.5 cm
+}
+
+
+% =======================================================================================
+% =======================================================================================
+% =======================================================================================
+
+
+\begin{document}
+
+\title{Day of Science}
+\date{December 15, 2023}
+
+
+%----------------------------------------------------------------------------------------
+%	 COVER PAGE
+%----------------------------------------------------------------------------------------
+
+\includepdf{images/adri-cells.pdf}
+
+%----------------------------------------------------------------------------------------
+%	 TABLE OF CONTENTS
+%----------------------------------------------------------------------------------------
+
+\tableofcontents
+
+%----------------------------------------------------------------------------------------
+%	 ABOUT CONFERENCE
+%----------------------------------------------------------------------------------------
+
+\chapter{About}
+
+\vskip 1 cm
+
+\section*{Day of Science}
+
+The annual Day of Science (DoS) aims to ...
+
+\vskip 1 cm
+
+\section*{Max Planck Institute for Molecular Genetics}
+
+The DoS is organized by the ... of the Max Planck Institute for Molecular Genetics (MPIMG) ...
+
+\vskip 1 cm
+
+\section*{Organizing committee}
+
+\begin{center}
+	\begin{tabular}{l l l}
+		Adriano Bolondi &  Anna A. Monaco &  Alessa Ringel\\
+		Jakob Schweizer  &  Thomas R. Silvers &
+	\end{tabular}
+\end{center}
+
+\vskip 1 cm
+
+\section*{Special thanks}
+	\begin{tabular}{l l l}
+		Max Planck & Harnack-Haus & Minerva
+	\end{tabular}
+
+\vskip 2 cm
+
+\noindent
+{\small This conference booklet was generated using \LaTeX{}, adapted from a template created by Maxime Lucas. All information about the use and distribution of this template, and all related codes, can be found at \url{https://github.com/maximelucas/AMCOS_booklet}. The entire source code for the adapted template and its generation can be found at \url{https://github.com/t-silvers/pyrty}.}
+
+%----------------------------------------------------------------------------------------
+%	 SCHEDULE
+%----------------------------------------------------------------------------------------
+
+\chapter{Schedule}
+
+%----------------------------------------------------------------------------------------
+%	 LIST OF TALK ABSTRACTS
+%----------------------------------------------------------------------------------------
+
+% Abstract template
+%\abstract
+%	{} % Title
+%	{} % Author(s)
+%	{} % Tag, can be: empty, \KLtag (keynote lecture), \IStag (invited speaker), \CTtag (contributed talk) or \ITtag (invited talk)
+%	{} % Affiliation(s)
+%	{} % Abstract text
+
+\chapter{List of Abstracts -- Talks}
+
+\input{talks.tex}
+
+\section{Session I: Genome biology}
+
+\section{Session II: New approaches in genomics}
+
+\section{Session III: Cell and developmental biology}
+
+%----------------------------------------------------------------------------------------
+%	 LIST OF POSTERS
+%----------------------------------------------------------------------------------------
+
+\chapter{List of Abstracts -- Posters} 
+
+\vspace{-2.5em}
+
+\section{Morning Session}
+
+\section{Afternoon Session}
+
+\section*{TBD Session}
+
+\input{posters.tex}
+
+%\dosabstract{Network biology for precision medicine}{Abeera Fatima, Ralf Herwig}{Herwig Lab, Abt. Bioinformatik}{Drug toxicity is a major problem in drug development, leading to clinical trial failures and harmful side effects in patients {[}1{]}. Conventional methods for assessing drug safety, such as animal testing, are being replaced by advanced bioinformatics tools. This ongoing project aims to develop a method for predicting drug toxicity by using biological networks and incorporating dynamic, multi{-}omics expression analysis. To identify genes that dynamically respond to drug treatments with a particular focus on leveraging the ConsensusPathDB {[}2{]} and NetCore {[}3{]} resources. These gene alterations are then mapped onto protein{-}protein interaction networks, utilizing stochastic processes to identify key sub{-}networks with significant dynamic changes. The ultimate goal of this research is to improve drug safety assessment and increase the success rate of drug development. One of the primary objectives of this study is to improve the re{-}ranking methodology of the NetCore to get better Gene Networks with biological significance.}
+%
+%----------------------------------------------------------------------------------------
+%	 LIST OF PARTICIPANTS
+%----------------------------------------------------------------------------------------
+
+\chapter{List of Participants}
+
+%----------------------------------------------------------------------------------------
+%	 USEFUL INFORMATION
+%----------------------------------------------------------------------------------------
+
+\chapter{Useful Information}
+
+%----------------------------------------------------------------------------------------
+%	 CLOSING PAGE
+%----------------------------------------------------------------------------------------
+
+\newpage
+
+%\thispagestyle{empty} % Suppress headers and footers on this page
+\pagecolor{mpigreen} % Coloured background
+~
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
