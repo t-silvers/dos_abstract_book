@@ -5,6 +5,7 @@ results/._published
 results/.published
 results/*.xlsx
 results/*.csv
+results/**/*.tex
 
 # dev
 *.jpg
