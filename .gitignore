@@ -1,5 +1,9 @@
 config/*.ini
 venv/*
+results/._published
+results/.published
+results/*.xlsx
+results/*.csv
 
 # dev
 *.jpg
