@@ -16,7 +16,7 @@ RCP := rclone copyto
 
 HOST := $(RCLONE_REMOTE):DoS
 # Note: Must use extension for rclone copyto to work
-AMENDED_ORIG := "$(HOST)/registration_responses.xlsx"
+AMENDED_ORIG := "$(HOST)/DoS_abstracts/registration_responses.xlsx"
 COMPLETE_ORIG := "$(HOST)/DoS2023Registration (Responses).xlsx"
 
 AMENDED_LOCAL := $(OUT)/amended_registration_responses.xlsx
